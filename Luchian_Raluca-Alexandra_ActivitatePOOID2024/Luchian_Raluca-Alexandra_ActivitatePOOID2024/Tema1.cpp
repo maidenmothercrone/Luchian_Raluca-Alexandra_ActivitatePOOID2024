@@ -71,6 +71,49 @@ public:
 		else this->nrPersoaneImbarcate = nouNrPersoaneImbarcate;
 	}
 
+	//supraincarcare operator de atribuire
+	Autobuz& operator=(const Autobuz& altul) {
+		//Verificare auto atribuire
+		if (this != &altul) {
+			//eliberare memorie existenta
+			delete[] this->producator;
+			//copiere atribute
+			this->capacitate = altul.capacitate;
+			this->nrPersoaneImbarcate = altul.nrPersoaneImbarcate;
+			if (altul.producator) {
+				this->producator = new char[strlen(altul.producator) + 1];
+				strcpy_s(this->producator, strlen(altul.producator) + 1, altul.producator);
+			}
+			else this->producator = nullptr;
+		}
+		else cout << "Nu se poate autoatribui. Mai incearca" << endl;
+		return *this;
+	}
+
+	//supraincarcare operator <<
+	friend ostream& operator<<(ostream& out, Autobuz& autobuz) {
+		out << "Id: " << autobuz.idAutobuz << "; "
+			<< "Capacitate: " << autobuz.capacitate << "; "
+			<< "Numar pasageri: " << autobuz.nrPersoaneImbarcate << "; "
+			<< "Producator: " << (autobuz.producator ? autobuz.producator : "N/A");
+
+		return out;
+	}
+
+	//metoda pentru afisare locuri libere in autobuz
+	int getNumarLocuriLibere() {
+		return (this->capacitate - this->nrPersoaneImbarcate);
+	}
+
+	//supraincarcare operator de cast la int
+	operator int() {
+		return nrPersoaneImbarcate;
+	}
+
+	//supraincarcare operator >
+	bool operator>(Autobuz& other) {
+		return this->capacitate > other.capacitate;
+	}
 
 	//functie de afisare
 	void afisareAutobuz() {
@@ -107,4 +150,43 @@ int main() {
 	cout << "Numarul initial de persoane imbarcate in autobuzul 1 este: " << autobuz0.getNrPersoaneImbarcate() << endl;
 	autobuz0.setNrPersoaneImbarcate(1);
 	cout << "Noul numar de persoane imbarcate in autobuzul 1 este: " << autobuz0.getNrPersoaneImbarcate() << endl;
+
+	//testare supraincarcare operator de atribuire
+	Autobuz autobuz2(40, 30, "Mercedes");
+	Autobuz autobuz3(36, 20, "Volvo");
+
+	cout << "Autobuz 2:" << endl;
+	autobuz2.afisareAutobuz();
+	cout << endl;
+	cout << "Autobuz 3 (initial):" << endl;
+	autobuz3.afisareAutobuz();
+	cout << endl;
+
+	//atribuire
+	autobuz3 = autobuz2;
+	cout << "Autobuz 3 (dupa atribuirea atributelor autobuzului 2):" << endl;
+	autobuz3.afisareAutobuz();
+	cout << endl;
+
+	//test autoatribuire
+	autobuz2 = autobuz2;
+	cout << "Dupa autoatribuire:" << endl;
+	autobuz2.afisareAutobuz();
+
+	//testare supraincarcare operator <<
+	cout << "Autobuz initial: " << autobuz0 << endl;
+	cout << "Autobuz 1: " << autobuz1 << endl;
+	cout << "Autobuz 2: " << autobuz2 << endl;
+	cout << "Autobuz 3: " << autobuz3 << endl;
+
+	//testare metoda de returnare locuri libere
+	cout << "Numar locuri libere in autobuz 2: " << autobuz2.getNumarLocuriLibere() << endl;
+
+	//testare supraincarcare operator de cast la int
+	int persoaneImbarcate = autobuz3;
+	cout << "Numarul de persoane imbarcate in autobuzul 3 este: " << persoaneImbarcate << endl;
+
+	//testare supraincarcare operator >
+	(autobuz2 > autobuz3) ? (cout << "Autobuzul 2 are o capacitate mai mare decat autobuzul 3.") : (cout << "Autobuzul 2 are o capacitate mai mica sau egala cu cea a autobuzului 3");
+
 }
