@@ -41,19 +41,40 @@ public:
 		for (int i = 0;i < nrDestinatii;i++) {
 			this->destinatie[i] = destinatie[i];
 		}
-		delete[] destinatie;
 		this->status = status;
 	}
 
+	//destructor
+	~Racheta() {
+		if (destinatie) {
+			delete[] destinatie;
+		}
+	}
+
+	//constructor de copiere
+	Racheta(const Racheta& alta) :id(++nrRachete) {
+		this->nume = alta.nume;
+		this->capacitateCombustibil = alta.capacitateCombustibil;
+		this->viteza = alta.viteza;
+		this->nrDestinatii = alta.nrDestinatii;
+		this->destinatie = new string[alta.nrDestinatii];
+		for (int i = 0; i < alta.nrDestinatii;i++) {
+			this->destinatie[i] = alta.destinatie[i];
+		}
+		this->status = alta.status;
+	}
+
+	//functie afisare
 	void afisareRacheta() {
-		cout << "Numele rachetei este " << this->nume << " si are o capacitate combustibil de "
-			<< this->capacitateCombustibil << ". Atinge o viteza de " << this->viteza << " si poate vizita pana la " << this->nrDestinatii << " destinatii din spatiul cosmic.";
+		cout << "Numele rachetei cu id " << this->id<< " este " << this->nume << " si are o capacitate combustibil de "
+			<< this->capacitateCombustibil << ". Atinge o viteza de " << this->viteza << " si poate vizita pana la " << this->nrDestinatii << " destinatii din spatiul cosmic. ";
 		if (this->destinatie != nullptr) {
 			cout << "Dintre acestea amintim: ";
 			for (int i = 0; i < this->nrDestinatii; i++) {
-				cout << this->destinatie[i] << endl;
+				cout << this->destinatie[i] << ", ";
 			}
 		}
+		cout << endl;
 	}
 
 };
@@ -64,6 +85,10 @@ int main() {
 	Racheta racheta1;
 	racheta1.afisareRacheta();
 
-	Racheta racheta2("NASA", 500, 200, 3, new float[3] {"Marte", "Luna", "Venus"}, "Lansata");
+	Racheta racheta2("NASA", 500, 200, 3, new string[3]{"Marte", "Luna", "Venus"}, "Lansata");
 	racheta2.afisareRacheta();
+
+	Racheta racheta3 = racheta2;
+	racheta3.afisareRacheta();
+
 }
